@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Surpresa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Botão Fugitivo</title>
   <style>
     * {
       margin: 0;
@@ -12,65 +12,63 @@
     }
 
     html, body {
-      height: 100%;
       width: 100%;
+      height: 100%;
+      background-color: #f31c6b;
+      overflow: hidden;
+      position: relative;
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #ff01aa;
-    }
-
-    #container {
-      text-align: center;
     }
 
     #botao {
-      padding: 20px 40px;
-      font-size: 2rem;
-      background: #014069;
-      color: rgb(255, 255, 255);
+      position: absolute;
+      padding: 15px 30px;
+      font-size: 1.5rem;
+      background-color: #014069;
+      color: white;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: 0.3s;
-    }
-
-    #botao:hover {
-      background: #012c49;
-    }
-
-    #mensagem {
-      font-size: 5rem;
-      color: #000000;
-      display: none;
-      text-align: center;
-      word-break: break-word;
-    }
-
-    @media (max-width: 600px) {
-      #botao {
-        font-size: 1.5rem;
-        padding: 15px 30px;
-      }
-
-      #mensagem {
-        font-size: 3rem;
-      }
+      transition: top 0.2s, left 0.2s;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <button id="botao" onclick="mostrarMensagem()">Clique aqui</button>
-    <div id="mensagem">LAURA OTÁRIA</div>
-  </div>
+  <button id="botao">Clique aqui!</button>
 
   <script>
-    function mostrarMensagem() {
-      document.getElementById("botao").style.display = "none";
-      document.getElementById("mensagem").style.display = "block";
+    const botao = document.getElementById("botao");
+
+    function moveBotao() {
+      const larguraTela = window.innerWidth;
+      const alturaTela = window.innerHeight;
+      const larguraBotao = botao.offsetWidth;
+      const alturaBotao = botao.offsetHeight;
+
+      const novaEsquerda = Math.random() * (larguraTela - larguraBotao);
+      const novoTopo = Math.random() * (alturaTela - alturaBotao);
+
+      botao.style.left = novaEsquerda + "px";
+      botao.style.top = novoTopo + "px";
     }
+
+    // Inicializa o botão em uma posição aleatória
+    moveBotao();
+
+    document.addEventListener("mousemove", (e) => {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      const botaoRect = botao.getBoundingClientRect();
+      const botaoX = botaoRect.left + botaoRect.width / 2;
+      const botaoY = botaoRect.top + botaoRect.height / 2;
+
+      const distancia = Math.hypot(mouseX - botaoX, mouseY - botaoY);
+
+      if (distancia < 100) {
+        moveBotao();
+      }
+    });
   </script>
 </body>
 </html>
