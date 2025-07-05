@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Botão Fugitivo</title>
+  <title>Botão Impossível</title>
   <style>
     * {
       margin: 0;
@@ -14,10 +14,10 @@
     html, body {
       width: 100%;
       height: 100%;
-      background-color: #f31c6b;
       overflow: hidden;
-      position: relative;
+      background-color: #ff1493;
       font-family: Arial, sans-serif;
+      position: relative;
     }
 
     #botao {
@@ -28,18 +28,19 @@
       color: white;
       border: none;
       border-radius: 10px;
-      cursor: pointer;
-      transition: top 0.2s, left 0.2s;
+      pointer-events: none; /* bloqueia qualquer clique */
+      user-select: none;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
-  <button id="botao">Clique aqui!</button>
+  <button id="botao">clica para jogar roblox 😎</button>
 
   <script>
     const botao = document.getElementById("botao");
 
-    function moveBotao() {
+    function moverBotao() {
       const larguraTela = window.innerWidth;
       const alturaTela = window.innerHeight;
       const larguraBotao = botao.offsetWidth;
@@ -52,23 +53,24 @@
       botao.style.top = novoTopo + "px";
     }
 
-    // Inicializa o botão em uma posição aleatória
-    moveBotao();
+    // Posição inicial
+    moverBotao();
 
     document.addEventListener("mousemove", (e) => {
       const mouseX = e.clientX;
       const mouseY = e.clientY;
 
-      const botaoRect = botao.getBoundingClientRect();
-      const botaoX = botaoRect.left + botaoRect.width / 2;
-      const botaoY = botaoRect.top + botaoRect.height / 2;
+      const rect = botao.getBoundingClientRect();
+      const botaoX = rect.left + rect.width / 2;
+      const botaoY = rect.top + rect.height / 2;
 
       const distancia = Math.hypot(mouseX - botaoX, mouseY - botaoY);
 
-      if (distancia < 100) {
-        moveBotao();
+      if (distancia < 150) {
+        moverBotao();
       }
     });
   </script>
 </body>
 </html>
+
