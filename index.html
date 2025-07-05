@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Surpresa</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ff01aa;
+    }
+
+    #container {
+      text-align: center;
+    }
+
+    #botao {
+      padding: 20px 40px;
+      font-size: 2rem;
+      background: #014069;
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #botao:hover {
+      background: #012c49;
+    }
+
+    #mensagem {
+      font-size: 5rem;
+      color: #000000;
+      display: none;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    @media (max-width: 600px) {
+      #botao {
+        font-size: 1.5rem;
+        padding: 15px 30px;
+      }
+
+      #mensagem {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <button id="botao" onclick="mostrarMensagem()">Clique aqui</button>
+    <div id="mensagem">LAURA OTÁRIA</div>
+  </div>
+
+  <script>
+    function mostrarMensagem() {
+      document.getElementById("botao").style.display = "none";
+      document.getElementById("mensagem").style.display = "block";
+    }
+  </script>
+</body>
+</html>
