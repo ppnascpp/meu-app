@@ -2,131 +2,123 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Jogo da Cobrinha</title>
+  <title>Cobrinha Touch</title>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: #111;
+      background: #000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: white;
-      font-family: sans-serif;
+      height: 100vh;
+      touch-action: none;
+      user-select: none;
     }
     canvas {
-      background: #222;
-      margin-top: 10px;
+      background: #111;
       border: 2px solid #444;
       touch-action: none;
     }
-    .controls {
-      display: grid;
-      grid-template-columns: repeat(3, 80px);
-      gap: 10px;
+    h1 {
+      color: white;
       margin-top: 20px;
-    }
-    .btn {
-      width: 80px;
-      height: 80px;
-      background: #333;
-      border-radius: 10px;
-      font-size: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-    }
-    .btn:active {
-      background: #555;
+      font-family: sans-serif;
     }
   </style>
 </head>
 <body>
+  <h1>🐍 Cobrinha</h1>
+  <canvas id="game" width="300" height="300"></canvas>
 
-<h1>🐍 Cobrinha</h1>
-<canvas id="game" width="300" height="300"></canvas>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const grid = 15;
+    let snake = [{x: 150, y: 150}];
+    let food = {x: 0, y: 0};
+    let dx = grid, dy = 0;
 
-<div class="controls">
-  <div></div>
-  <div class="btn" onclick="dir = 'up'">⬆</div>
-  <div></div>
-  <div class="btn" onclick="dir = 'left'">⬅</div>
-  <div></div>
-  <div class="btn" onclick="dir = 'right'">➡</div>
-  <div></div>
-  <div class="btn" onclick="dir = 'down'">⬇</div>
-  <div></div>
-</div>
-
-<script>
-  const canvas = document.getElementById("game");
-  const ctx = canvas.getContext("2d");
-
-  const grid = 15;
-  let snake = [{x: 150, y: 150}];
-  let food = {x: 0, y: 0};
-  let dir = 'right';
-  let dx = grid, dy = 0;
-
-  function randPos() {
-    return Math.floor(Math.random() * (canvas.width / grid)) * grid;
-  }
-
-  function placeFood() {
-    food.x = randPos();
-    food.y = randPos();
-  }
-
-  placeFood();
-
-  function updateDirection() {
-    if (dir === 'up' && dy === 0)      { dx = 0; dy = -grid; }
-    if (dir === 'down' && dy === 0)    { dx = 0; dy = grid;  }
-    if (dir === 'left' && dx === 0)    { dx = -grid; dy = 0; }
-    if (dir === 'right' && dx === 0)   { dx = grid; dy = 0;  }
-  }
-
-  function gameLoop() {
-    updateDirection();
-
-    const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-
-    // fim de jogo
-    if (
-      head.x < 0 || head.x >= canvas.width ||
-      head.y < 0 || head.y >= canvas.height ||
-      snake.some(seg => seg.x === head.x && seg.y === head.y)
-    ) {
-      alert("💀 Game Over!");
-      snake = [{x: 150, y: 150}];
-      dir = 'right';
-      dx = grid; dy = 0;
-      placeFood();
-      return;
+    function randPos() {
+      return Math.floor(Math.random() * (canvas.width / grid)) * grid;
     }
 
-    snake.unshift(head);
-
-    if (head.x === food.x && head.y === food.y) {
-      placeFood();
-    } else {
-      snake.pop();
+    function placeFood() {
+      food.x = randPos();
+      food.y = randPos();
     }
 
-    ctx.fillStyle = "#222";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    placeFood();
 
-    ctx.fillStyle = "#0f0";
-    snake.forEach(s => ctx.fillRect(s.x, s.y, grid - 1, grid - 1));
+    function gameLoop() {
+      const head = {x: snake[0].x + dx, y: snake[0].y + dy};
 
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x, food.y, grid - 1, grid - 1);
-  }
+      // colisões
+      if (
+        head.x < 0 || head.x >= canvas.width ||
+        head.y < 0 || head.y >= canvas.height ||
+        snake.some(s => s.x === head.x && s.y === head.y)
+      ) {
+        alert("💀 Game Over!");
+        snake = [{x: 150, y: 150}];
+        dx = grid; dy = 0;
+        placeFood();
+        return;
+      }
 
-  setInterval(gameLoop, 150);
-</script>
+      snake.unshift(head);
 
+      if (head.x === food.x && head.y === food.y) {
+        placeFood();
+      } else {
+        snake.pop();
+      }
+
+      ctx.fillStyle = "#111";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "lime";
+      snake.forEach(s => ctx.fillRect(s.x, s.y, grid - 1, grid - 1));
+
+      ctx.fillStyle = "red";
+      ctx.fillRect(food.x, food.y, grid - 1, grid - 1);
+    }
+
+    setInterval(gameLoop, 150);
+
+    // controle por swipe/touch
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    canvas.addEventListener("touchstart", e => {
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    });
+
+    canvas.addEventListener("touchend", e => {
+      const touch = e.changedTouches[0];
+      const dxTouch = touch.clientX - touchStartX;
+      const dyTouch = touch.clientY - touchStartY;
+
+      if (Math.abs(dxTouch) > Math.abs(dyTouch)) {
+        // horizontal
+        if (dxTouch > 0 && dx !== -grid) {
+          dx = grid; dy = 0;
+        } else if (dxTouch < 0 && dx !== grid) {
+          dx = -grid; dy = 0;
+        }
+      } else {
+        // vertical
+        if (dyTouch > 0 && dy !== -grid) {
+          dx = 0; dy = grid;
+        } else if (dyTouch < 0 && dy !== grid) {
+          dx = 0; dy = -grid;
+        }
+      }
+    });
+  </script>
 </body>
 </html>
+
